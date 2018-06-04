@@ -1,8 +1,8 @@
 # TokenContract
 
-Symbol      : BETA
+Symbol      : COMM
 
-Name        : Crypto Smart Beta
+Name        : Crypto Commonwealth
 
 Total supply: 100000000000
 
