@@ -1,11 +1,11 @@
 pragma solidity ^0.4.18;
 
 // ----------------------------------------------------------------------------
-// Crypto Smart Beta token contract
+// Crypto Commonwealth token contract
 //
 // Deployed to : 0xF7f522563d76C20fD88BE26771c880bF57BF7902
-// Symbol      : BETA
-// Name        : Crypto Smart Beta
+// Symbol      : COMM
+// Name        : Crypto Commonwealth
 // Total supply: 100000000000
 // Decimals    : 18
 // ----------------------------------------------------------------------------
@@ -66,8 +66,8 @@ contract Owned {
     address public newOwner;
 
     event OwnershipTransferred(address indexed _from, address indexed _to);
-
-    function Owned() public {
+    
+    constructor() public {
         owner = msg.sender;
     }
 
@@ -81,7 +81,7 @@ contract Owned {
     }
     function acceptOwnership() public {
         require(msg.sender == newOwner);
-        OwnershipTransferred(owner, newOwner);
+        emit OwnershipTransferred(owner, newOwner);
         owner = newOwner;
         newOwner = address(0);
     }
@@ -105,13 +105,13 @@ contract BETA is ERC20Interface, Owned, SafeMath {
     // ------------------------------------------------------------------------
     // Constructor
     // ------------------------------------------------------------------------
-    function BETA() public {
-        symbol = "BETA";
-        name = "Crypto Smart Beta";
+    constructor() public {
+        symbol = "COMM";
+        name = "Crypto Commonwealth";
         decimals = 18;
         _totalSupply = 100000000000000000000000000000;
         balances[0xF7f522563d76C20fD88BE26771c880bF57BF7902] = _totalSupply;
-        Transfer(address(0), 0xF7f522563d76C20fD88BE26771c880bF57BF7902, _totalSupply);
+        emit Transfer(address(0), 0xF7f522563d76C20fD88BE26771c880bF57BF7902, _totalSupply);
     }
 
 
@@ -139,7 +139,7 @@ contract BETA is ERC20Interface, Owned, SafeMath {
     function transfer(address to, uint tokens) public returns (bool success) {
         balances[msg.sender] = safeSub(balances[msg.sender], tokens);
         balances[to] = safeAdd(balances[to], tokens);
-        Transfer(msg.sender, to, tokens);
+        emit Transfer(msg.sender, to, tokens);
         return true;
     }
 
@@ -150,7 +150,7 @@ contract BETA is ERC20Interface, Owned, SafeMath {
     // ------------------------------------------------------------------------
     function approve(address spender, uint tokens) public returns (bool success) {
         allowed[msg.sender][spender] = tokens;
-        Approval(msg.sender, spender, tokens);
+        emit Approval(msg.sender, spender, tokens);
         return true;
     }
 
@@ -168,7 +168,7 @@ contract BETA is ERC20Interface, Owned, SafeMath {
         balances[from] = safeSub(balances[from], tokens);
         allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);
         balances[to] = safeAdd(balances[to], tokens);
-        Transfer(from, to, tokens);
+        emit Transfer(from, to, tokens);
         return true;
     }
 
@@ -189,7 +189,7 @@ contract BETA is ERC20Interface, Owned, SafeMath {
     // ------------------------------------------------------------------------
     function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {
         allowed[msg.sender][spender] = tokens;
-        Approval(msg.sender, spender, tokens);
+        emit Approval(msg.sender, spender, tokens);
         ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);
         return true;
     }
@@ -210,3 +210,5 @@ contract BETA is ERC20Interface, Owned, SafeMath {
         return ERC20Interface(tokenAddress).transfer(owner, tokens);
     }
 }
+
+
